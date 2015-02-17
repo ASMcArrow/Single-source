@@ -1,17 +1,34 @@
-#/geometry/navigator/push_notify 0
-#/geometry/navigator/verbose 0
-#/control/saveHistory
+# Macro file for the visualization setting in the initialization phase
+# of the B1 example when running in interactive mode
+#
 
-/vis/open OGLSQt
-
-#/vis/viewer/set/autoRefresh false
-#/vis/verbose errors
-
+# Use these open statements to open selected visualization
+#
+# Use this open statement to create an OpenGL view:
+/vis/open OGL 600x600-0+0
+#
+# Use this open statement to create an OpenInventor view:
+#/vis/open OI
+#
+# Use this open statement to create a .prim file suitable for
+# viewing in DAWN:
+#/vis/open DAWNFILE
+#
+# Use this open statement to create a .heprep file suitable for
+# viewing in HepRApp:
+#/vis/open HepRepFile
+#
+# Use this open statement to create a .wrl file suitable for
+# viewing in a VRML viewer:
+#/vis/open VRML2FILE
+#
+# Disable auto refresh and quieten vis messages whilst scene and
+# trajectories are established:
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+#
+# Draw geometry:
 /vis/drawVolume
-
-/vis/scene/add/trajectories
-/vis/scene/endOfEventAction accumulate
-/run/beamOn 100
 
 
 
