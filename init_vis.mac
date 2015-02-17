@@ -1,0 +1,17 @@
+#/geometry/navigator/push_notify 0
+#/geometry/navigator/verbose 0
+#/control/saveHistory
+
+/vis/open OGLSQt
+
+#/vis/viewer/set/autoRefresh false
+#/vis/verbose errors
+
+/vis/drawVolume
+
+/vis/scene/add/trajectories
+/vis/scene/endOfEventAction accumulate
+/run/beamOn 100
+
+
+
