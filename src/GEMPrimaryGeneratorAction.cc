@@ -39,4 +39,12 @@ GEMPrimaryGeneratorAction::~GEMPrimaryGeneratorAction()
 void GEMPrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
     CircleSource->GeneratePrimaryVertex(event);
+    std::ofstream file;
+    file.open("PrimaryVertex_X.txt", std::ios_base::app | std::ios_base::out);
+    file << event->GetPrimaryVertex()->GetPosition().getX() << "\n";
+
+    file.open("PrimaryVertex_X_cut.txt", std::ios_base::app | std::ios_base::out);
+    if ((event->GetPrimaryVertex()->GetPosition().getY() < 1)&&(event->GetPrimaryVertex()->GetPosition().getY() > (-1)))
+        //file << event->GetPrimaryVertex()->GetPosition().getX() << "\n";
+        G4cout << "Hit!" << G4endl;
 }
