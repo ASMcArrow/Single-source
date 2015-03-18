@@ -57,12 +57,12 @@ void GEMVoxParallelWorld::Construct()
     GhostDetectorZeroLog->SetVisAttributes(visAttributesIso);
 
     // Divide along X coordinate at isocenter depth
-    G4Box* ghostXBoxIso = new G4Box("ghostXBoxIso", halfBoxWidth, detHalfDimension, 1*cm);
+    G4Box* ghostXBoxIso = new G4Box("ghostXBoxIso", halfBoxWidth, detHalfDimension, 0.25*cm);
     G4LogicalVolume *GhostXBoxIsoLog = new G4LogicalVolume(ghostXBoxIso, 0, "GhostXBoxIsoLog");
     new G4PVReplica("GhostXBoxIsoPhys", GhostXBoxIsoLog, GhostDetectorIsoLog, kXAxis, nDivisions, halfBoxWidth*2, 0);
 
     // Divide along Y coordinate at isocenter depth
-    G4Box* ghostYBoxIso = new G4Box("ghostYBoxIso", halfBoxWidth, halfBoxWidth, 1*cm);
+    G4Box* ghostYBoxIso = new G4Box("ghostYBoxIso", halfBoxWidth, halfBoxWidth, 0.25*cm);
     GhostYBoxIsoLog = new G4LogicalVolume(ghostYBoxIso, 0, "GhostYBoxIsoLog");
     new G4PVReplica("GhostYBoxIsoPhys", GhostYBoxIsoLog, GhostXBoxIsoLog, kYAxis, nDivisions, halfBoxWidth*2, 0);
 }

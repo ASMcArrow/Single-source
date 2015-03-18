@@ -11,11 +11,11 @@ GEMActionInitialization::~GEMActionInitialization()
 
 void GEMActionInitialization::BuildForMaster() const
 {
-    SetUserAction(new GEMRunAction("ProfileDetectorZero", "ProfileDetectorIso"));
+    SetUserAction(new GEMRunAction("ProfileDetectorZero", "ProfileDetectorIso", "ICBMDetector"));
 }
 
 void GEMActionInitialization::Build() const
 {
     SetUserAction(new GEMPrimaryGeneratorAction);
-    SetUserAction(new GEMRunAction("ProfileDetectorZero", "ProfileDetectorIso"));
+    SetUserAction(new GEMRunAction("ProfileDetectorZero", "ProfileDetectorIso", "ICBMDetector"));
 }

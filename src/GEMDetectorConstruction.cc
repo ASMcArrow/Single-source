@@ -36,6 +36,16 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     G4VPhysicalVolume *worldPhys = new G4PVPlacement(0, G4ThreeVector(), worldLogic, "WorldPhys", 0, false, 0);
     worldLogic->SetVisAttributes(visAttributes);
 
+    // ICBM
+    G4Box* mylarStrip = new G4Box("MylarStripSheet", 1.25*mm, 1.5*cm, 0.0125*mm);
+    MylarStripLogic = new G4LogicalVolume(mylarStrip, MaterialMap["Mylar"], "MylarStripLogic");
+
+    for( unsigned int i = 0; i < 6; i++ )
+    {
+        G4ThreeVector offset(-5*1.5*mm -5*1.25*mm + (2*1.25*mm + 3*mm)*i, 0, -256.0*cm);
+        G4VPhysicalVolume* mylarStripPhys = new G4PVPlacement(0, offset, MylarStripLogic, "MylarStripPhys", worldLogic, false, i);
+    }
+
     // Scanning Magnet
     G4Box* magnet = new G4Box("Magnet", 2.54*cm, 2.54*cm, 25*cm);
     MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
@@ -78,7 +88,14 @@ GEMDetectorConstruction::~GEMDetectorConstruction()
 }
 
 void GEMDetectorConstruction::ConstructSDandField()
-{}
+{
+    G4SDManager* sDman = G4SDManager::GetSDMpointer();
+
+    GEMDetectorSD* ICBMDetector = new GEMDetectorSD("ICBMDetector", "ICBMHitsCollection");
+    sDman->AddNewDetector(ICBMDetector);
+    MylarStripLogic->SetSensitiveDetector(ICBMDetector);
+}
+
 
 void GEMDetectorConstruction::InitializeMaterials()
 {

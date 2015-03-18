@@ -12,7 +12,7 @@ class GEMRun : public G4Run
 {
 
 public:
-    GEMRun(const G4String detectorName1, const G4String detectorName2, G4bool verbose);
+    GEMRun(const G4String detectorName1, const G4String detectorName2, const G4String detectorName, G4bool verbose);
     virtual ~GEMRun();
 
     // virtual method from G4Run.
@@ -26,6 +26,8 @@ public:
             return HitVector1.size();
         else if (detectorName == "ProfileDetectorIso")
             return HitVector2.size();
+        else if (detectorName == "ICBMDetector")
+            return HitVector.size();
     }
 
     inline GEMDetectorHit* GetHit(G4String detectorName, G4int i)
@@ -34,14 +36,16 @@ public:
             return HitVector1[i];
         else if (detectorName == "ProfileDetectorIso")
             return HitVector2[i];
+        else if (detectorName == "ICBMDetector")
+            return HitVector[i];
     }
 
 private:
     void AddHitToVector(GEMDetectorHitsCollection* HC, std::vector<GEMDetectorHit *> *vector);
 
-    G4String CollName1, CollName2;
-    G4int CollectionID1, CollectionID2;
-    std::vector<GEMDetectorHit*> HitVector1, HitVector2;
+    G4String CollName1, CollName2, CollName;
+    G4int CollectionID1, CollectionID2,  CollectionID;
+    std::vector<GEMDetectorHit*> HitVector1, HitVector2, HitVector;
     G4bool Verbose;
 };
 
