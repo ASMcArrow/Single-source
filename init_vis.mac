@@ -7,7 +7,7 @@
 
 /vis/scene/add/trajectories
 /vis/scene/endOfEventAction accumulate
-/run/beamOn 10
+#/run/beamOn 10
 
 
 

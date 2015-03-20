@@ -12,7 +12,7 @@ using namespace CLHEP;
 class GEMVoxParallelWorld : public G4VUserParallelWorld
 {
 public:
-    GEMVoxParallelWorld(G4String worldName);
+    GEMVoxParallelWorld(G4String worldName):G4VUserParallelWorld(worldName){}
     virtual ~GEMVoxParallelWorld()
     {
         if (ZeroDetector != NULL)

@@ -21,7 +21,7 @@ GEMPrimaryGeneratorAction::GEMPrimaryGeneratorAction()
     position->SetPosDisType("Beam");
     //position->SetPosDisShape("Circle");
     //position->SetRadius(1.25*cm);
-    position->SetCentreCoords(G4ThreeVector(0.0*m, 0.0*m, -256.0*cm - 10*cm));
+    position->SetCentreCoords(G4ThreeVector(0.0*m, 0.0*m, -280.0*cm - 1*cm));
     position->SetBeamSigmaInR(3.83*mm);
 
     G4SPSAngDistribution* angular = CircleSource->GetAngDist();

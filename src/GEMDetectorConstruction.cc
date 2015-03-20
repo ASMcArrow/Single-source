@@ -37,42 +37,19 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     worldLogic->SetVisAttributes(visAttributes);
 
     // ICBM
-    G4Box* mylarStrip = new G4Box("MylarStripSheet", 1.25*mm, 1.5*cm, 0.0125*mm);
-    MylarStripLogic = new G4LogicalVolume(mylarStrip, MaterialMap["Mylar"], "MylarStripLogic");
-
-    for( unsigned int i = 0; i < 6; i++ )
-    {
-        G4ThreeVector offset(-5*1.5*mm -5*1.25*mm + (2*1.25*mm + 3*mm)*i, 0, -256.0*cm);
-        G4VPhysicalVolume* mylarStripPhys = new G4PVPlacement(0, offset, MylarStripLogic, "MylarStripPhys", worldLogic, false, i);
-    }
-
-    // Scanning Magnet
-    G4Box* magnet = new G4Box("Magnet", 2.54*cm, 2.54*cm, 25*cm);
-    MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
-    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -230*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);
-    /*G4Tubs* magnet = new G4Tubs("Magnet", 0*cm, 2.54*cm, 25*cm, 0, CLHEP::twopi);
-    MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
-    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);*/
-
-    // PDM Detector
-    G4Box* mylarSheet = new G4Box("MylarSheet", 12.5*cm, 12.5*cm, 0.0125*mm);
+    G4Box* mylarSheet = new G4Box("MylarSheet", 2.5*cm, 2.5*cm, 0.0125*mm);
     G4LogicalVolume* mylarLogic = new G4LogicalVolume(mylarSheet, MaterialMap["Mylar"], "MylarLogic");
 
     for( unsigned int i = 0; i < 9; i++ )
     {
-        G4ThreeVector offset(0, 0, -118*cm+0.0125*mm+((0.0125*mm*2+1.6*mm)*i));
+        G4ThreeVector offset(0, 0, -280*cm-8*0.0125*mm-4*1.5*mm+(1.5*mm+2*0.0125*mm)*i);
         G4VPhysicalVolume* mylarPhys = new G4PVPlacement(0, offset, mylarLogic, "MylarPhys", worldLogic, false, 0);
     }
 
-    // Aperture
-    /*G4Tubs* aperture = new G4Tubs("Aperture", 2.5*cm, 50*cm, 3.25*cm, 0, CLHEP::twopi);
-    G4LogicalVolume* apertureLogic = new G4LogicalVolume(aperture, MaterialMap["Brass"], "ApertureLogic");
-    G4VPhysicalVolume* aperturePhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -30*cm-3.25*cm), apertureLogic, "AperturePhys", worldLogic, false, 0);*/
-
-    // Phantom
-    //    G4Box* phantom = new G4Box("Phantom", 15*cm, 15*cm, 11*cm);
-    //    PhantomLogic = new G4LogicalVolume(phantom, MaterialMap["Water"], "PhantomLogic");
-    //    G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), PhantomLogic, "PhantomPhys", worldLogic, false, 0);
+    // Scanning Magnet
+    G4Box* magnet = new G4Box("Magnet", 3*cm, 3*cm, 37*cm);
+    MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
+    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -242*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);
 
     return worldPhys;
 }
@@ -88,14 +65,7 @@ GEMDetectorConstruction::~GEMDetectorConstruction()
 }
 
 void GEMDetectorConstruction::ConstructSDandField()
-{
-    G4SDManager* sDman = G4SDManager::GetSDMpointer();
-
-    GEMDetectorSD* ICBMDetector = new GEMDetectorSD("ICBMDetector", "ICBMHitsCollection");
-    sDman->AddNewDetector(ICBMDetector);
-    MylarStripLogic->SetSensitiveDetector(ICBMDetector);
-}
-
+{}
 
 void GEMDetectorConstruction::InitializeMaterials()
 {

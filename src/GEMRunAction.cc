@@ -22,15 +22,13 @@
 #include <iostream>
 #define _USE_MATH_DEFINES
 
-GEMRunAction::GEMRunAction(const G4String detectorName1, const G4String detectorName2, const G4String detectorName3) : G4UserRunAction()
+GEMRunAction::GEMRunAction(const std::vector<G4String> nameVector) : G4UserRunAction()
 {
     //    G4UImanager* UImanager = G4UImanager::GetUIpointer();
     //    DebugUISession * LoggedSession = new DebugUISession;
     //    UImanager->SetCoutDestination(LoggedSession);
 
-    ProfileDetectorName1 = detectorName1;
-    ProfileDetectorName2 = detectorName2;
-    ICBMDetectorName = detectorName3;
+    NameVector = nameVector;
 
     for (int i = 0; i < 100; i++)
     {
@@ -44,7 +42,7 @@ GEMRunAction::GEMRunAction(const G4String detectorName1, const G4String detector
         Depth[i] = 0;
     }
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 15; i++)
     {
         Cells4[i] = 0;
     }
@@ -58,7 +56,7 @@ GEMRunAction::~GEMRunAction()
 
 G4Run* GEMRunAction::GenerateRun()
 {
-    return new GEMRun(ProfileDetectorName1, ProfileDetectorName2, ICBMDetectorName, 0);
+    return new GEMRun(NameVector, 0);
 }
 
 void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
@@ -73,7 +71,7 @@ void GEMRunAction::EndOfRunAction(const G4Run* aRun)
     GEMRun *gemRun = (GEMRun*)aRun;
 
     G4cout << "GEMRunAction: Number of events in this run " << gemRun->GetNumberOfEventToBeProcessed() << G4endl;
-    G4cout << "GEMRunAction: Number of hits in this run in ZeroProfile detector " << gemRun->GetNumberOfHits(ICBMDetectorName) << G4endl;
+    G4cout << "GEMRunAction: Number of hits in this run in ZeroProfile detector " << gemRun->GetNumberOfHits(NameVector[0]) << G4endl;
 
     if(!IsMaster()) return;
 
@@ -90,9 +88,9 @@ void GEMRunAction::EndOfRunAction(const G4Run* aRun)
     }
 
     std::ofstream ICBMFile("ICBM.txt");
-    for (G4int i = 0; i < 6; i++)
+    for (G4int i = 0; i < 15; i++)
     {
-        ICBMFile << -5*1.5*mm -5*1.25*mm + (2*1.25*mm + 3*mm)*i << " " << Cells4[i] << "\n";
+        ICBMFile << -3*mm*7+i*3*mm << " " << Cells4[i] << "\n";
     }
 
     this->DumpProfile("ZeroMT", gemRun);

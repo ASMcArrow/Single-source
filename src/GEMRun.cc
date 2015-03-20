@@ -1,29 +1,33 @@
 #include "GEMRun.hh"
 #include "G4SDManager.hh"
 
-GEMRun::GEMRun(const G4String detectorName1, const G4String detectorName2, const G4String detectorName, G4bool verbose) : G4Run()
+extern G4ThreadLocal G4Allocator<GEMDetectorHit>* GEMDetectorHitAllocator;
+
+GEMRun::GEMRun(const std::vector<G4String> namevector, G4bool verbose) : G4Run()
 {
+    NameVector = namevector;
+
     G4SDManager* SDman = G4SDManager::GetSDMpointer();
-    G4VSensitiveDetector* detector1 = SDman->FindSensitiveDetector(detectorName1);
-    G4VSensitiveDetector* detector2 = SDman->FindSensitiveDetector(detectorName2);
-    G4VSensitiveDetector* detector = SDman->FindSensitiveDetector(detectorName);
 
-    CollName1 = detector1->GetCollectionName(0);
-    CollName2 = detector2->GetCollectionName(0);
-    CollName = detector->GetCollectionName(0);
-
-    CollectionID1 = SDman->GetCollectionID(CollName1);
-    CollectionID2 = SDman->GetCollectionID(CollName2);
-    CollectionID = SDman->GetCollectionID(CollName);
+    for (G4int i = 0; i < NameVector.size(); i++)
+    {
+        G4VSensitiveDetector* detector = SDman->FindSensitiveDetector(NameVector[i]);
+        G4String collName = detector->GetCollectionName(0);
+        G4int collectionID = SDman->GetCollectionID(collName);
+        IDVector.push_back(collectionID);
+        HitVectorVector.push_back(std::vector<GEMDetectorHit*> (0));
+    }
 
     Verbose = verbose;
 }
 
 GEMRun::~GEMRun()
 {
-    HitVector1.clear();
-    HitVector2.clear();
-    HitVector.clear();
+    for (G4int i = 0; i < HitVectorVector.size(); i++)
+    {
+        for (G4int j = 0; j < HitVectorVector[i].size(); j++)
+            HitVectorVector[i].clear();
+    }
 }
 
 void GEMRun::RecordEvent(const G4Event* aEvent)
@@ -33,33 +37,15 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
     G4HCofThisEvent* HCE = aEvent->GetHCofThisEvent();
     if(HCE!=NULL)
     {
-        GEMDetectorHitsCollection* HC1 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID1));
-        if(HC1!=NULL)
+        for (G4int i = 0; i < IDVector.size(); i++)
         {
-            if (Verbose) G4cout << CollectionID1 << G4endl;
-            this->AddHitToVector(HC1, &HitVector1);
+            GEMDetectorHitsCollection* HC = (GEMDetectorHitsCollection*)(HCE -> GetHC(IDVector[i]));
+            if(HC!=NULL)
+            {
+                if (Verbose) G4cout << "Collection ID processed is ... " << IDVector[i] << G4endl;
+                this->AddHitToVector(HC, &HitVectorVector[i]);
+            }
         }
-
-        GEMDetectorHitsCollection* HC2 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID2));
-        if(HC2!=NULL)
-        {
-            if (Verbose) G4cout << CollectionID2 << G4endl;
-            this->AddHitToVector(HC2, &HitVector2);
-        }
-
-        GEMDetectorHitsCollection* HC = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID));
-        if(HC!=NULL)
-        {
-            if (Verbose) G4cout << CollectionID << G4endl;
-            this->AddHitToVector(HC, &HitVector);
-        }
-
-        //        GEMDetectorHitsCollection* HC3 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID3));
-        //        if(HC3!=NULL)
-        //        {
-        //            if (Verbose) G4cout << CollectionID3 << G4endl;
-        //            this->AddHitToVector(HC3, &HitVector3);
-        //        }
     }
 }
 
@@ -77,30 +63,27 @@ void GEMRun::AddHitToVector(GEMDetectorHitsCollection *HC, std::vector<GEMDetect
         vector->push_back((GEMDetectorHit*)(copyHit));
     }
 
-    //    if (HC->entries() != 0)
-    //    {
-    //        if(Verbose)
-    //        {
-    //            for (G4int l = 0; l < vector->size(); l++)
-    //            {
-    //                G4cout << "HitsVector Recorded: " << "l =" << l << " Energy deposition is " << vector[l]->GetEdep()
-    //                       <<  " Position is " << vector[l]->GetPos()[0] << G4endl;
-    //            }
-    //        }
-    //    }
+    if (HC->entries() != 0)
+    {
+        if(Verbose)
+        {
+            for (G4int l = 0; l < vector->size(); l++)
+            {
+                G4cout << "HitsVector Recorded: " << "l =" << l << " Energy deposition is " << (*vector)[l]->GetEdep()
+                       <<  " Position is " << (*vector)[l]->GetPos()[0] << G4endl;
+            }
+        }
+    }
 }
 
 void GEMRun::Merge(const G4Run * aRun)
 {
     const GEMRun *localRun = static_cast<const GEMRun*>(aRun);
-    for (G4int i = 0; i < localRun -> HitVector1.size(); i++)
-        HitVector1.push_back(localRun -> HitVector1[i]);
-    for (G4int j = 0; j < localRun -> HitVector2.size(); j++)
-        HitVector2.push_back(localRun -> HitVector2[j]);
-    for (G4int j = 0; j < localRun -> HitVector.size(); j++)
-        HitVector.push_back(localRun -> HitVector[j]);
-    //    for (G4int k = 0; k < localRun -> HitVector3.size(); k++)
-    //        HitVector3.push_back(localRun -> HitVector3[k]);
+    for (G4int i = 0; i < HitVectorVector.size(); i++)
+    {
+        for (G4int j = 0; j < localRun -> HitVectorVector[i].size(); j++)
+            HitVectorVector[i].push_back(localRun -> HitVectorVector[i][j]);
+    }
 
     G4Run::Merge(aRun);
 }

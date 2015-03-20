@@ -27,8 +27,6 @@ private:
 
     std::map <std::string, G4Material*> MaterialMap;
     G4LogicalVolume* MagnetLogic;
-    G4LogicalVolume* PhantomLogic;
-    G4LogicalVolume* MylarStripLogic;
 };
 
 #endif

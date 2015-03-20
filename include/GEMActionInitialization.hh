@@ -2,6 +2,8 @@
 #define GEMACTIONINITIASLIZATION_HH
 
 #include "G4VUserActionInitialization.hh"
+#include <vector>
+#include "globals.hh"
 
 class GEMActionInitialization : public G4VUserActionInitialization
 {
@@ -12,6 +14,9 @@ class GEMActionInitialization : public G4VUserActionInitialization
 
     virtual void BuildForMaster() const;
     virtual void Build() const;
+
+private:
+    std::vector<G4String> NameVector;
 };
 
 #endif // GEMACTIONINITIASLIZATION_HH

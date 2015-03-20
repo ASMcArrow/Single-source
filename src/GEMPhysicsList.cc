@@ -53,8 +53,8 @@ GEMPhysicsList::GEMPhysicsList() : G4VModularPhysicsList()
 
     SetVerboseLevel(1);
 
-    RegisterPhysics(new PhysListEmStandardSingleSc);
-   // RegisterPhysics(new G4EmStandardPhysics_option4);
+    //RegisterPhysics(new PhysListEmStandardSingleSc);
+    RegisterPhysics(new G4EmStandardPhysics_option4);
     RegisterPhysics(new G4HadronPhysicsQGSP_BIC);
     RegisterPhysics(new G4EmExtraPhysics);
     RegisterPhysics(new G4HadronElasticPhysics);
@@ -78,14 +78,24 @@ void GEMPhysicsList::AddParallelScoring()
             = new G4ParallelWorldScoringProcess("ParaWorldScoringProcProfile");
     theParallelWorldScoringProcessProfile->SetParallelWorld("GEMVoxParallelWorld");
 
+    G4ParallelWorldScoringProcess* theParallelWorldScoringProcessICBM
+            = new G4ParallelWorldScoringProcess("ParaWorldScoringProcICBM");
+    theParallelWorldScoringProcessICBM->SetParallelWorld("GEMICBMParallelWorld");
+
     theParticleIterator->reset();
     while((*theParticleIterator)())
     {
         G4ProcessManager* pmanager = theParticleIterator->value()->GetProcessManager();
+
         pmanager->AddProcess(theParallelWorldScoringProcessProfile);
         pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessProfile, idxAtRest);
         pmanager->SetProcessOrdering(theParallelWorldScoringProcessProfile, idxAlongStep, 1);
         pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessProfile, idxPostStep);
+
+        pmanager->AddProcess(theParallelWorldScoringProcessICBM);
+        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessICBM, idxAtRest);
+        pmanager->SetProcessOrdering(theParallelWorldScoringProcessICBM, idxAlongStep, 1);
+        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessICBM, idxPostStep);
     }
 }
 

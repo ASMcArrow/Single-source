@@ -10,14 +10,6 @@
 #include "G4VisAttributes.hh"
 #include "G4SDManager.hh"
 
-GEMVoxParallelWorld::GEMVoxParallelWorld(G4String worldName)
-    :G4VUserParallelWorld(worldName)
-{
-    // G4SDManager* sDman = G4SDManager::GetSDMpointer();
-    // sDetector = new GEMDetectorSD("MarkusDetector");
-    // sDman->AddNewDetector(sDetector);
-}
-
 void GEMVoxParallelWorld::Construct()
 {
     G4VPhysicalVolume *ghostWorld = GetWorld();
@@ -77,7 +69,7 @@ void GEMVoxParallelWorld::ConstructSD()
 
     IsoDetector = new GEMDetectorSD("ProfileDetectorIso", "ProfileHitsCollectionIso");
     sDman->AddNewDetector(IsoDetector);
-    GhostDetectorIsoLog->SetSensitiveDetector(IsoDetector);
+    // GhostDetectorIsoLog->SetSensitiveDetector(IsoDetector);
     GhostYBoxIsoLog->SetSensitiveDetector(IsoDetector);
 }
 
