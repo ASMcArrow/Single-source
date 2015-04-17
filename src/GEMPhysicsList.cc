@@ -30,11 +30,22 @@ using namespace CLHEP;
 
 GEMPhysicsList::GEMPhysicsList() : G4VModularPhysicsList()
 {
-    G4LossTableManager::Instance();
+    //G4LossTableManager::Instance();
     defaultCutValue = 1.*mm;
     cutForGamma     = defaultCutValue;
     cutForElectron  = defaultCutValue;
     cutForPositron  = defaultCutValue;
+
+    SetVerboseLevel(1);
+
+    RegisterPhysics(new PhysListEmStandardSingleSc);
+   // RegisterPhysics(new G4EmStandardPhysics_option4);
+    RegisterPhysics(new G4HadronPhysicsQGSP_BIC);
+    RegisterPhysics(new G4EmExtraPhysics);
+    RegisterPhysics(new G4HadronElasticPhysics);
+    RegisterPhysics(new G4StoppingPhysics);
+    RegisterPhysics(new G4IonBinaryCascadePhysics);
+    RegisterPhysics(new G4NeutronTrackingCut);
 
     G4EmParameters* emParameters = G4EmParameters::Instance();
     emParameters->SetMinEnergy(100*eV);
@@ -50,17 +61,6 @@ GEMPhysicsList::GEMPhysicsList() : G4VModularPhysicsList()
 
     emParameters->SetApplyCuts(true);
     emParameters->SetVerbose(true);
-
-    SetVerboseLevel(1);
-
-    //RegisterPhysics(new PhysListEmStandardSingleSc);
-    RegisterPhysics(new G4EmStandardPhysics_option4);
-    RegisterPhysics(new G4HadronPhysicsQGSP_BIC);
-    RegisterPhysics(new G4EmExtraPhysics);
-    RegisterPhysics(new G4HadronElasticPhysics);
-    RegisterPhysics(new G4StoppingPhysics);
-    RegisterPhysics(new G4IonBinaryCascadePhysics);
-    RegisterPhysics(new G4NeutronTrackingCut);
 }
 
 GEMPhysicsList::~GEMPhysicsList()

@@ -1,3 +1,5 @@
+
+//#undef G4MULTITHREADED
 #include <cstdio>
 #include <ctime>
 
@@ -70,7 +72,7 @@ int main(int argc,char** argv)
     ui->SessionStart();
     delete ui;
 #else
-    runManager->BeamOn(10000);
+    runManager->BeamOn(10000000);
 #endif
 
     delete runManager;

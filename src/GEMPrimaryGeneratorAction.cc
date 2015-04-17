@@ -22,13 +22,13 @@ GEMPrimaryGeneratorAction::GEMPrimaryGeneratorAction()
     //position->SetPosDisShape("Circle");
     //position->SetRadius(1.25*cm);
     position->SetCentreCoords(G4ThreeVector(0.0*m, 0.0*m, -280.0*cm - 1*cm));
-    position->SetBeamSigmaInR(3.83*mm);
+    position->SetBeamSigmaInR(4.5*mm);
 
     G4SPSAngDistribution* angular = CircleSource->GetAngDist();
     angular->SetAngDistType("beam1d");
     angular->SetParticleMomentumDirection(G4ThreeVector(0.0,0.0,1.0));
     angular->DefineAngRefAxes("angref1", G4ThreeVector(-1.0,0.0,0.0));
-    angular->SetBeamSigmaInAngR(0.005);
+    angular->SetBeamSigmaInAngR(0.003);
 
     CircleSource->SetNumberOfParticles(1);
 }

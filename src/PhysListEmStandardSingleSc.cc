@@ -404,17 +404,22 @@ void PhysListEmStandardSingleSc::ConstructProcess()
         } else if (particleName == "proton" ||
                    particleName == "anti_proton") {
 
-            //  G4hMultipleScattering* pmsc = new G4hMultipleScattering();
+            G4hMultipleScattering* pmsc = new G4hMultipleScattering();
+            pmsc->AddEmModel(0, new G4WentzelVIModel());
+            pmsc->SetStepLimitType(fUseDistanceToBoundary);
+            pmsc->SetLateralDisplasmentFlag(true);
+            pmsc->SetSkin(1);
+
             G4hIonisation* hIoni = new G4hIonisation();
-            hIoni->SetStepFunction(0.1, 20*um);
+            // hIoni->SetStepFunction(0.1, 20*um);
 
-            G4CoulombScattering* csc = new G4CoulombScattering();
-            G4hCoulombScatteringModel* csc_model = new G4hCoulombScatteringModel();
-            csc->SetEmModel(csc_model, 1);
+            // G4CoulombScattering* csc = new G4CoulombScattering();
+            // G4hCoulombScatteringModel* csc_model = new G4hCoulombScatteringModel();
+            // csc->SetEmModel(csc_model, 1);
 
-            ph->RegisterProcess(csc, particle);
+            //  ph->RegisterProcess(csc, particle);
 
-            //  ph->RegisterProcess(pmsc, particle);
+            ph->RegisterProcess(pmsc, particle);
             ph->RegisterProcess(hIoni, particle);
             ph->RegisterProcess(pb, particle);
             ph->RegisterProcess(pp, particle);

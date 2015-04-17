@@ -15,8 +15,8 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 FILE(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 FILE(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
-ADD_EXECUTABLE(SingleSource GEM.cc ${sources} ${headers})
-TARGET_LINK_LIBRARIES(SingleSource ${Geant4_LIBRARIES})
+ADD_EXECUTABLE(SingleSourceICBM GEM.cc ${sources} ${headers})
+TARGET_LINK_LIBRARIES(SingleSourceICBM ${Geant4_LIBRARIES})
 
 set(GEM_SCRIPTS
     init_vis.mac)
